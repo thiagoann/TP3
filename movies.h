@@ -2,24 +2,20 @@
 /*         Trabalho pratico 3 | PROG2 | MIEEC | 2018/19        */
 /*****************************************************************/
 
-
 #ifndef MOVIES_H
 #define MOVIES_H
 
 #include "vetor.h"
 
-
-
 /* tabela de dispersao de strings baseada em encadeamento */
-
 
 /** Conteudo individual da tabela de dispersao (colecaoClientes):
  * cada cliente tem um username e um vetor dos filmesId vistos
  */
 typedef struct
 {
-	char* username;
-	vetor* vistos;
+	char *username;
+	vetor *vistos;
 } cliente;
 
 /** Elemento da tabela de dispersao (colecaoClientes):
@@ -28,8 +24,8 @@ typedef struct
  */
 typedef struct elem
 {
-	cliente* clien;
-	struct elem* proximo;
+	cliente *clien;
+	struct elem *proximo;
 } elementoCliente;
 
 /**
@@ -37,36 +33,38 @@ typedef struct elem
  */
 typedef struct
 {
-	elementoCliente **elementos;	/* vetor de elementos */
-	int tamanho;			/* tamanho do vetor de elementos */
+	elementoCliente **elementos; /* vetor de elementos */
+	int tamanho;				 /* tamanho do vetor de elementos */
 } colecaoClientes;
 
 /**
  * A estrutura filme serve para armazenar os dados relativos a um filme:
  * Nota: o filmId é um numero a começar em 1 e sequencial.
 */
-typedef struct 
+typedef struct
 {
-	char* titulo;
-	char* categoria;
+	char *titulo;
+	char *categoria;
 	unsigned int filmId;
 	float rating;
 } filme;
 
 /** Estrutura colecaoFilmes deverá ser completada de forma a ser possivel guardar os filmes em memoria
+ * Assim como a estrutura colecaoClientes, a estrutura colecaoFilmes será implementada para dados
+ * a tabela de dispersão.
  * */
-typedef struct 
+typedef struct
 {
-	//Completar com a(s) estrutura(s) desejada(s)
+	filme *film; //vetor de filmes apontando para a estrutura de filmes
+	int tamanhoFilm;  //apontador para o proximo filme
 } colecaoFilmes;
-
 
 /**
  * Cria uma colecaoClientes (tabela de dispersao)
  * parametros: tamanho da tabela de dispersao
  * retorno: uma tabela de dispersao vazia que representa a colecaoClientes
  */
-colecaoClientes* colecaoClientesNova(int tamanho);
+colecaoClientes *colecaoClientesNova(int tamanho);
 
 /**
  * Apaga uma colecaoClientes (tabela de dispersao)
@@ -114,15 +112,13 @@ int clienteRemove(colecaoClientes *td, const char *username);
  * parametros: username do cliente, tamanho da tabela
  * retorno: valor de hash
  */
-unsigned long hash_cliente(const char* username, int tamanho);
-
+unsigned long hash_cliente(const char *username, int tamanho);
 
 /**
  * Imprime o estado actual da tabela para o ecra
  * parametros: colecaoClientes (tabela de dispersao) a ser mostrada
  */
 void mostraTabela(colecaoClientes *td);
-
 
 /**
  * Coloca na estrura colecaoFilmes (a escolher pelo grupo) a informacao contida no ficheiro
@@ -133,7 +129,7 @@ void mostraTabela(colecaoClientes *td);
  * NOTA: esta funcao devera fazer o parse dos dados lidos do ficheiro e chamar para cada linha
  * 		do mesmo a funcao "inserirNovoFilme"
  */
-colecaoFilmes* filmesCarrega(const char *nomeFicheiro);
+colecaoFilmes *filmesCarrega(const char *nomeFicheiro);
 
 /**
  * Insere um novo filme na estrura colecaoFilmes (a escolher pelo grupo)
@@ -141,23 +137,22 @@ colecaoFilmes* filmesCarrega(const char *nomeFicheiro);
  * 			filme, identificador unico do filme, rating do filme
  * retorno: 1 se teve sucesso, 0 se já existe o filme na estrutura e -1 se ocorreu algum erro
  */
-int inserirNovoFilme(colecaoFilmes* colecFilmes, char* titulo, char* categoria, int filmId, float rating);
-
+int inserirNovoFilme(colecaoFilmes *colecFilmes, char *titulo, char *categoria, int filmId, float rating);
 
 /**
- * Remove um  filme da estrura colecaoFilmes (a escolher pelo grupo) e da estrutura colecaoClientes
+ * Remove um  filme da estrutura colecaoFilmes (a escolher pelo grupo) e da estrutura colecaoClientes
  * parametro: apontador para a estrutura colecaoFilmes, apontador para a estrutura colecaoClientes e identificador unico do filme
  * retorno: 1 se teve sucesso, 0 nao existe o filme na estrutura e -1 se ocorreu algum erro
  *  NOTA 1: Não se esqueça que tem que remover o filme dos vistos dos clientes
  */
-int removerFilme(colecaoFilmes* colecFilmes, colecaoClientes *td, int filmId);
+int removerFilme(colecaoFilmes *colecFilmes, colecaoClientes *td, int filmId);
 
 /**
  * Apaga uma colecaoFilmes (estrutra implementada pelos alunos)
- * parametros: apontador para colecaoFilmes a apagar e para a tabela de Clioentes
+ * parametros: apontador para colecaoFilmes a apagar e para a tabela de Clientes
  */
 
-void colecaoFilmesApaga(colecaoFilmes* colecFilmes, colecaoClientes *td);
+void colecaoFilmesApaga(colecaoFilmes *colecFilmes, colecaoClientes *td);
 
 /**
  * Sugere nFilmes para um determinado cliente 
@@ -174,6 +169,6 @@ void colecaoFilmesApaga(colecaoFilmes* colecFilmes, colecaoClientes *td);
  *         empate neste critério)
  * Nota 5: Quando dois ou mais filmes tiverem o mesmo rating é escolhido o que tive o filmId maior que significa que é o mais recente
  */
-vetor* sugestoes(colecaoFilmes* colecFilmes, colecaoClientes *td,char* username, int nFilmes, float limiar);
+vetor *sugestoes(colecaoFilmes *colecFilmes, colecaoClientes *td, char *username, int nFilmes, float limiar);
 
 #endif
