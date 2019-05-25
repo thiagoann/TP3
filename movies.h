@@ -41,22 +41,25 @@ typedef struct
  * A estrutura filme serve para armazenar os dados relativos a um filme:
  * Nota: o filmId é um numero a começar em 1 e sequencial.
 */
-typedef struct
+typedef struct filme_
 {
 	char *titulo;
 	char *categoria;
 	unsigned int filmId;
 	float rating;
-} filme;
+} filme_t;
 
 /** Estrutura colecaoFilmes deverá ser completada de forma a ser possivel guardar os filmes em memoria
- * Assim como a estrutura colecaoClientes, a estrutura colecaoFilmes será implementada para dados
- * a tabela de dispersão.
+ * A estrutura escolhida foi de fila de prioridade (heap).
  * */
-typedef struct
-{
-	filme *film; //vetor de filmes apontando para a estrutura de filmes
-	int tamanhoFilm;  //apontador para o proximo filme
+typedef struct film
+{	
+	/* numero de elementos no vetor */
+	int tamanho;
+	/* capacidade da heap */
+	int capacidade;
+	/* apontador para a estrutura filme para guardar os dados do filme */
+	filme_t **movies;
 } colecaoFilmes;
 
 /**
@@ -170,5 +173,16 @@ void colecaoFilmesApaga(colecaoFilmes *colecFilmes, colecaoClientes *td);
  * Nota 5: Quando dois ou mais filmes tiverem o mesmo rating é escolhido o que tive o filmId maior que significa que é o mais recente
  */
 vetor *sugestoes(colecaoFilmes *colecFilmes, colecaoClientes *td, char *username, int nFilmes, float limiar);
+
+/*-----------------------------------------------------------------------------------------------------------*/
+
+// Funcoes auxiliares //
+
+/**
+ *  Insere elemento na heap
+ * 	parametros: apontador para heap, apontador para elemento a inserir
+ * 	retorno: 1 se sucesso, 0 se erro
+ */
+int heap_insere(colecaoFilmes *cf, filme_t* elem);
 
 #endif

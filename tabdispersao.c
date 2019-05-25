@@ -57,7 +57,7 @@ void tabela_apaga(tabela_dispersao *td)
     free(td);
 }
 
-int tabela_adiciona(tabela_dispersao *td, const char *chave, const char *valor)
+int tabela_adiciona(tabela_dispersao *td, const char *chave, int *valor)
 {
     int index;
     elemento * elem;

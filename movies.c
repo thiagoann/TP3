@@ -7,8 +7,58 @@
 #include <string.h>
 #include <math.h>
 #include "movies.h"
+#include "tabdispersao.h"
+
+#define RAIZ (1)
+#define PAI(x) (x / 2)
 
 //Declaracao funcoes auxiliares//
+int heap_insere(colecaoFilmes *cf, filme_t **films);
+int maior_que(filme_t *film1, filme_t *film2);
+
+int maior_que(filme_t *film1, filme_t *film2)
+{
+    if (film1 == NULL || film2 == NULL)
+    {
+        return 0;
+    }
+
+    return film1->filmId > film2->filmId;
+}
+
+int heap_insere(colecaoFilmes *cf, filme_t *films)
+{
+
+    filme_t *aux;
+    int i;
+    //TMM
+    if (!cf)
+        return 0;
+    /* se heap esta' cheia, nao insere elemento */
+    if (cf->tamanho >= cf->capacidade)
+        return 0;
+
+    if (!films)
+        return 0;
+
+    /* coloca elemento no fim da heap */
+    cf->tamanho++;
+    i = cf->tamanho;
+    cf->movies[i] = films;
+
+    /* enquanto elemento for mais prioritario do que o respetivo pai, troca-os */
+    while (i != RAIZ && maior_que(cf->movies[i], cf->movies[PAI(i)]))
+    {
+        aux = cf->movies[PAI(i)];
+        cf->movies[PAI(i)] = cf->movies[i];
+        cf->movies[i] = aux;
+        i = PAI(i);
+    }
+    return 1;
+
+    //Default
+    return 0;
+}
 
 //////   Implementacao Tabela de Dispersão - Clientes  ///////
 colecaoClientes *colecaoClientesNova(int tamanho)
@@ -65,7 +115,6 @@ void colecaoClientesApaga(colecaoClientes *td)
 
 int clienteAdiciona(colecaoClientes *td, const char *username, unsigned int filmId)
 {
-    /*
     //Se a table for NULL ou username for NULL ou filmId for 0, return -1.
     if (td == NULL || username == NULL || filmId < 0)
     {
@@ -80,7 +129,7 @@ int clienteAdiciona(colecaoClientes *td, const char *username, unsigned int film
      * mais de uma vez.
      */
     /*Enquanto o vetor de elementos for diferente de NULL*/
-    /*
+
     while (elements != NULL)
     {
         if (strcmp(elements->clien->username, username) == 0)
@@ -91,7 +140,7 @@ int clienteAdiciona(colecaoClientes *td, const char *username, unsigned int film
             {
                 int filmeIdAtual = elements->clien->vistos->elementos[i];
                 /*Percorrendo vetor*/
-    /*
+
                 if (filmId == filmeIdAtual)
                 {
                     filmExiste = 1;
@@ -165,8 +214,9 @@ int colecaoNumClientes(colecaoClientes *td)
     elementoCliente *searchClient = (elementoCliente *)malloc(sizeof(elementoCliente));
     int numClients = 0;
 
-    if(searchClient == NULL){
-        free(searchClient);
+    if (td->elementos == NULL)
+    {
+        free(td);
     }
 
     for (j = 0; j < td->tamanho; j++)
@@ -190,7 +240,8 @@ int clienteExiste(colecaoClientes *td, const char *username)
     int key = hash_cliente(username, td->tamanho);
     elementoCliente *verifCliente = td->elementos[key];
     int k;
-    if(td->elementos[key] == NULL){
+    if (td->elementos[key] == NULL)
+    {
         free(td);
     }
     //Percorre tabela
@@ -262,62 +313,63 @@ void mostraTabela(colecaoClientes *td)
 /* inserir um Novo Filme*/
 int inserirNovoFilme(colecaoFilmes *colecFilmes, char *titulo, char *categoria, int filmId, float rating)
 {
-    colecFilmes = (colecaoFilmes*) malloc(sizeof(colecaoFilmes));
+    colecFilmes = (colecaoFilmes *)malloc(sizeof(colecaoFilmes));
     if (colecFilmes == NULL || titulo == NULL || categoria == NULL || filmId < 0 || rating < 0)
-    {   
-        free(colecFilmes);
+    {
         return -1;
-        
     }
-    int cont;
-    filme *newMovie;
-    for (cont = 0; cont < colecFilmes->tamanhoFilm; cont++)
+    filme_t *newMovie = (filme_t **)malloc(sizeof(filme_t));
+    int r;
+    for (r = 0; r < colecFilmes->tamanho; r++)
     {
-        //Insere no vetor
-        vetor_insere(newMovie->film, )
-        colecFilmes->film->categoria = categoria;
-        colecFilmes->film->filmId = filmId;
-        colecFilmes->film->rating = rating;
-    }
-    if (colecFilm->film->filmId == filmdId)
-    {
-        return 0;
-    }
-    else
-    {
-        return 1;
+        if (newMovie->filmId == filmId)
+        {
+            return 0;
+        }
+        else
+        {
+            heap_insere(colecFilmes->movies[r], newMovie->titulo);
+            heap_insere(colecFilmes->movies[r], newMovie->categoria);
+            heap_insere(colecFilmes->movies[r], newMovie->filmId);
+            heap_insere(colecFilmes->movies[r], newMovie->rating);
+            return 1;
+        }
     }
 }
-
 colecaoFilmes *filmesCarrega(const char *nomeFicheiro)
 {
-    FILE *f;
-    nomef = "filmeShort.txt";
-    f = fopen("fi")
+        colecaoFilmes *collection = (colecaoFilmes*)malloc(sizeof(colecaoFilmes)); 
+        FILE *f;
+        nomeFicheiro = "filmeShort.txt";
+        fopen(f, nomeFicheiro, "rw+");
 
-        return NULL;
+        if(f == NULL || collection == NULL){
+            return NULL;
+        }
+    
 }
 
 // Remover um filme///
+/*
 int removerFilme(colecaoFilmes *colecFilmes, colecaoClientes *td, int filmId)
 {
     if (colecFilmes == NULL || td == NULL || filmId < 0)
     {
         return -1;
     }
-    elementoCliente *watched = (elementoCliente*)malloc(sizeof(elementoCliente));
-    filme *movie = (filme*)malloc(sizeof(filme));
+    elementoCliente *watched = (elementoCliente *)malloc(sizeof(elementoCliente));
+    filme *movie = (filme *)malloc(sizeof(filme));
     int contClient;
     int contFilm;
-    
-    while (watched!= NULL)
+
+    while (watched != NULL)
     {
-        if(colecFilmes->film->filmId == filmId){
-            if(watched->clien->)
+        if (colecFilmes->film->filmId == filmId)
+        {
+            if (watched->clien->)
         }
     }
-    
-    }
+}*/
 
 // Remover a estrutura colecaoFilmes
 void colecaoFilmesApaga(colecaoFilmes *colecFilmes, colecaoClientes *td)
