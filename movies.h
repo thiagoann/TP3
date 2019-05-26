@@ -58,7 +58,7 @@ typedef struct film
 	int tamanho;
 	/* capacidade da heap */
 	int capacidade;
-	/* apontador para a estrutura filme para guardar os dados do filme */
+	/* vetor de apontadores para a estrutura filme que guarda os dados do filme */
 	filme_t **movies;
 } colecaoFilmes;
 

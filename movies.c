@@ -7,14 +7,9 @@
 #include <string.h>
 #include <math.h>
 #include "movies.h"
-#include "tabdispersao.h"
 
 #define RAIZ (1)
 #define PAI(x) (x / 2)
-
-//Declaracao funcoes auxiliares//
-int heap_insere(colecaoFilmes *cf, filme_t **films);
-int maior_que(filme_t *film1, filme_t *film2);
 
 int maior_que(filme_t *film1, filme_t *film2)
 {
@@ -123,11 +118,9 @@ int clienteAdiciona(colecaoClientes *td, const char *username, unsigned int film
     cliente *newClient;
     elementoCliente *elements;
     int posicao = 0;
+    int i;
     //Se a filmId já foi vista, sai do ciclo. Caso contrário, adiciona.
 
-    /**Perguntar se pode usar outro ficheiro e se o filme pode existir
-     * mais de uma vez.
-     */
     /*Enquanto o vetor de elementos for diferente de NULL*/
 
     while (elements != NULL)
@@ -136,7 +129,7 @@ int clienteAdiciona(colecaoClientes *td, const char *username, unsigned int film
         {
             int filmExiste = 0;
             //Se o cliente já existe e já viu o filme...
-            for (int i = 0; i < elements->clien->vistos; i++)
+            for (i = 0; i < td->tamanho; i++)
             {
                 int filmeIdAtual = elements->clien->vistos->elementos[i];
                 /*Percorrendo vetor*/
@@ -146,8 +139,8 @@ int clienteAdiciona(colecaoClientes *td, const char *username, unsigned int film
                     filmExiste = 1;
                 }
             }
-            
-            if (filmExiste = 1)
+
+            if (filmExiste == 1)
             {
                 return 0;
             }
@@ -255,11 +248,8 @@ int clienteExiste(colecaoClientes *td, const char *username)
             return 1;
         }
         //Senão, retorna 0
-        else
-        {
-            return 0;
-        }
     }
+    return 0;
 }
 
 unsigned long hash_cliente(const char *username, int tamanho)
@@ -318,41 +308,54 @@ int inserirNovoFilme(colecaoFilmes *colecFilmes, char *titulo, char *categoria, 
     {
         return -1;
     }
-    filme_t *newMovie = (filme_t **)malloc(sizeof(filme_t));
+    filme_t *newMovie = (filme_t *)malloc(sizeof(filme_t));
+
+    if (newMovie == NULL)
+    {
+        free(newMovie);
+    }
     int r;
     for (r = 0; r < colecFilmes->tamanho; r++)
     {
+        //Não podem haver filmes com o mesmo ID.
         if (newMovie->filmId == filmId)
         {
             return 0;
         }
         else
         {
-            heap_insere(colecFilmes->movies[r], newMovie->titulo);
-            heap_insere(colecFilmes->movies[r], newMovie->categoria);
-            heap_insere(colecFilmes->movies[r], newMovie->filmId);
-            heap_insere(colecFilmes->movies[r], newMovie->rating);
-            return 1;
+            newMovie->titulo = titulo;
+            heap_insere(colecFilmes, newMovie);
+            newMovie->categoria = categoria;
+            heap_insere(colecFilmes, newMovie);
+            newMovie->filmId = filmId;
+            heap_insere(colecFilmes, newMovie);
+            newMovie->rating = rating;
+            heap_insere(colecFilmes, newMovie);
         }
     }
+return 1;
 }
+
 colecaoFilmes *filmesCarrega(const char *nomeFicheiro)
 {
-        colecaoFilmes *collection = (colecaoFilmes*)malloc(sizeof(colecaoFilmes)); 
-        FILE *f;
-        nomeFicheiro = "filmeShort.txt";
-        fopen(f, nomeFicheiro, "rw+");
+    colecaoFilmes *collection = (colecaoFilmes *)malloc(sizeof(colecaoFilmes));
+    FILE *f;
+    nomeFicheiro = "filmeShort.txt";
+    fopen(nomeFicheiro, "rw+");
 
-        if(f == NULL || collection == NULL){
-            return NULL;
-        }
-    
+    if (f == NULL || collection == NULL)
+    {
+        return NULL;
+    }
+    return NULL;
 }
 
 // Remover um filme///
-/*
+
 int removerFilme(colecaoFilmes *colecFilmes, colecaoClientes *td, int filmId)
 {
+    /*
     if (colecFilmes == NULL || td == NULL || filmId < 0)
     {
         return -1;
@@ -369,7 +372,9 @@ int removerFilme(colecaoFilmes *colecFilmes, colecaoClientes *td, int filmId)
             if (watched->clien->)
         }
     }
-}*/
+*/
+    return 0;
+}
 
 // Remover a estrutura colecaoFilmes
 void colecaoFilmesApaga(colecaoFilmes *colecFilmes, colecaoClientes *td)
