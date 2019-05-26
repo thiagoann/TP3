@@ -334,7 +334,7 @@ int inserirNovoFilme(colecaoFilmes *colecFilmes, char *titulo, char *categoria, 
             heap_insere(colecFilmes, newMovie);
         }
     }
-return 1;
+    return 1;
 }
 
 colecaoFilmes *filmesCarrega(const char *nomeFicheiro)
@@ -342,13 +342,38 @@ colecaoFilmes *filmesCarrega(const char *nomeFicheiro)
     colecaoFilmes *collection = (colecaoFilmes *)malloc(sizeof(colecaoFilmes));
     FILE *f;
     nomeFicheiro = "filmeShort.txt";
-    fopen(nomeFicheiro, "rw+");
-
+    fpos_t *posFile; //buscar posicao inicial do ficheiro
+    char *line = NULL;
+    int initPos = 0; //posicao inicial do ficheiro inicializada a 0.
+    int i;
+    f = fopen(nomeFicheiro, "r+");
     if (f == NULL || collection == NULL)
     {
         return NULL;
     }
-    return NULL;
+    if (initPos)
+    {
+        fsetpos(f, posFile);
+    }
+    while (!feof(f))
+    {
+        for (i = 0; i < collection->tamanho; i++)
+        {
+
+            if (fscanf(f, "%s|%s|%d|%lf", collection->movies[i]->titulo, collection->movies[i]->categoria,
+                       collection->movies[i]->filmId, collection->movies[i]->rating))
+            {
+                while (!feof(f))
+                {
+                    sscanf(line, nomeFicheiro, "%s|%s|%d|%lf");
+                    inserirNovoFilme(collection, collection->movies[i]->titulo, collection->movies[i]->categoria,
+                                     collection->movies[i]->filmId, collection->movies[i]->rating);
+                }
+            }
+        }
+    }
+
+    return collection;
 }
 
 // Remover um filme///
